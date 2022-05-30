@@ -45,6 +45,7 @@ void Threadsprime::printPrime(int number, int thread_num)
                 for (auto val:vec.get())
                     std::cout << val << " ";
             }
+            std::cout << std::endl;
         });
 
     last_thread.join();
