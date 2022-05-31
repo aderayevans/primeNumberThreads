@@ -14,8 +14,11 @@ void Threadsprime::printPrime(int number, int thread_num)
     std::vector<std::promise<std::vector<int>>> vectorOfPromise;
     std::vector<std::future<std::vector<int>>> vectorOfFuture;
 
+    std::vector<std::thread> vectorOfThread;
+
     vectorOfPromise.resize(thread_num);
     vectorOfFuture.resize(thread_num);
+    vectorOfThread.resize(thread_num);
 
     for (int i = 0; i < thread_num; ++i) 
     {
@@ -34,9 +37,14 @@ void Threadsprime::printPrime(int number, int thread_num)
                 prom.set_value(Normalprime::getPrime(first, last));
             }, ref(vectorOfPromise[i]), first, last);
 
-        temp.join();
+        vectorOfThread[i] = std::move(temp);
+        // temp.join();
         first = last + 1;
     }
+    for (int i = 0; i < thread_num; ++i) 
+    {
+        vectorOfThread[i].join();
+    } 
     std::thread last_thread(
         [&]()
         {
